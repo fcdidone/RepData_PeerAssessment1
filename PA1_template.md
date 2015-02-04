@@ -1,9 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
@@ -12,7 +7,8 @@ output:
 
 
 
-```{r}
+
+```r
 read.csv("activity.csv") -> activity
 ```
 
@@ -23,7 +19,8 @@ read.csv("activity.csv") -> activity
 I only need to adjust the class of the column date from now
 
 
-```{r}
+
+```r
 as.Date(activity$date) -> activity$date
 ```
  
@@ -37,8 +34,8 @@ First, I loaded the plyr package for helping me to calculate the total number, s
 Then I counted the total steps number. Note: I did not remove the missing values, because the assingment says to ignore and not to omit, but I think both aways are okay.
 
 
-```{r}
 
+```r
 library(plyr)
 ddply(activity, ~ date,summarise, step.total = sum(steps)) -> total
 ```
@@ -49,20 +46,33 @@ I used the ggplot2 package ande the sclae package for making this histrogram
 
 
 
-```{r}
+
+```r
 library(ggplot2)
 library(scales)
 p <- ggplot(total, aes( x = date, y = step.total))
 p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps")+ ggtitle("Histogram of the total number os steps taken each day")+scale_x_date(breaks=date_breaks(width="15 days"))
 ```
 
+```
+## Warning: Removed 8 rows containing missing values (position_stack).
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
 
 
 3. Calculate and report the mean and median of the total number of steps taken per day
 
 
-```{r}
+
+```r
 summary(total[,2])[3:4]
+```
+
+```
+## Median   Mean 
+##  10760  10770
 ```
 
 ## What is the average daily activity pattern?
@@ -73,10 +83,13 @@ summary(total[,2])[3:4]
 
 
 
-```{r}
+
+```r
 ddply(activity, ~interval,summarise, avg.step = mean(steps,na.rm=T)) -> time
 ggplot(time, aes(interval, avg.step)) + geom_line()+ xlab("intervals") + ylab("average steps")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
 
 
 
@@ -84,22 +97,24 @@ ggplot(time, aes(interval, avg.step)) + geom_line()+ xlab("intervals") + ylab("a
 
 
 
-```{r A1}
+
+```r
 time[which.max(time$avg.step),][1] -> a1
 ```
 
-Answer: `r a1` inteval
+Answer: 835 inteval
 
 ## Imputing missing values
  
 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
-```{r}
+
+```r
 sum(is.na(activity$step)) -> a2
 ```
 
 
-Answer: `r a2`
+Answer: 2304
 
 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.  
 
@@ -109,8 +124,8 @@ Answer: `r a2`
 The strategy is using the mean for that 5-minute interval to subsitute all missing values in the dataset
 
 
-```{r}
 
+```r
 activity -> activity2
 for(i in 1:nrow(activity2)) {
         
@@ -126,18 +141,21 @@ for(i in 1:nrow(activity2)) {
 4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
 
-```{r}
+
+```r
 as.Date(activity2$date) -> activity2$date
 ddply(activity2, ~date,summarise, step.total = sum(steps,na.rm=T)) -> total2
 p <- ggplot(total2, aes( x = date, y = step.total))
 p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps")+ ggtitle("Histogram of the total number os steps taken each day")+scale_x_date(breaks=date_breaks(width="15 days"))
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
 The values are almost the same as we can see here:
 
 
-```{r}
+
+```r
 summary(total2[,2])[3:4] -> a3
 
 summary(total[,2])[3:4] -> a4
@@ -145,9 +163,21 @@ summary(total[,2])[3:4] -> a4
 ## with missing values
 
 print(a4)
+```
 
+```
+## Median   Mean 
+##  10760  10770
+```
+
+```r
 ## without missing values
 print(a3)
+```
+
+```
+## Median   Mean 
+##  10770  10770
 ```
 
 
@@ -157,8 +187,8 @@ print(a3)
 1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
 
-```{r}
 
+```r
 weekdays(activity2$date) -> day
 for(i in 1:length(day)){
        
@@ -176,10 +206,13 @@ cbind(activity2,day) -> acweek
 
 
 
-```{r}
+
+```r
 ddply(acweek, day ~ interval,summarise, avg.step = mean(steps,na.rm=T)) -> time2
 ggplot(time2, aes(interval, avg.step)) + geom_line()+ xlab("intervals") + ylab("average steps")+facet_grid(day ~ .)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
 
 The end.
 
