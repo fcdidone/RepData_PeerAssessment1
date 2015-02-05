@@ -31,13 +31,13 @@ as.Date(activity$date) -> activity$date
 
 First, I loaded the plyr package for helping me to calculate the total number, since it is simpler than the split aplay method.
 
-Then I counted the total steps number. Note: I did not remove the missing values, because the assingment says to ignore and not to omit, but I think both aways are okay.
+Then I counted the total steps number. Note: Iremove the missing values, because the assingment says to ignore for know.
 
 
 
 ```r
 library(plyr)
-ddply(activity, ~ date,summarise, step.total = sum(steps)) -> total
+ddply(activity, ~ date,summarise, step.total = sum(steps, na.rm= TRUE)) -> total
 ```
 
 2. Make a histogram of the total number of steps taken each day
@@ -54,10 +54,6 @@ p <- ggplot(total, aes( x = date, y = step.total))
 p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps")+ ggtitle("Histogram of the total number os steps taken each day")+scale_x_date(breaks=date_breaks(width="15 days"))
 ```
 
-```
-## Warning: Removed 8 rows containing missing values (position_stack).
-```
-
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
 
@@ -72,7 +68,7 @@ summary(total[,2])[3:4]
 
 ```
 ## Median   Mean 
-##  10760  10770
+##  10400   9354
 ```
 
 ## What is the average daily activity pattern?
@@ -151,7 +147,7 @@ p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
-The values are almost the same as we can see here:
+The values are almost the same are diferent as we can see here:
 
 
 
@@ -167,7 +163,7 @@ print(a4)
 
 ```
 ## Median   Mean 
-##  10760  10770
+##  10400   9354
 ```
 
 ```r

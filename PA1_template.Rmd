@@ -34,13 +34,12 @@ as.Date(activity$date) -> activity$date
 
 First, I loaded the plyr package for helping me to calculate the total number, since it is simpler than the split aplay method.
 
-Then I counted the total steps number. Note: I did not remove the missing values, because the assingment says to ignore and not to omit, but I think both aways are okay.
+Then I counted the total steps number. Note: Iremove the missing values, because the assingment says to ignore for know.
 
 
 ```{r}
-
 library(plyr)
-ddply(activity, ~ date,summarise, step.total = sum(steps)) -> total
+ddply(activity, ~ date,summarise, step.total = sum(steps, na.rm= TRUE)) -> total
 ```
 
 2. Make a histogram of the total number of steps taken each day
@@ -134,7 +133,7 @@ p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps
 
 ```
 
-The values are almost the same as we can see here:
+The values are almost the same are diferent as we can see here:
 
 
 ```{r}
