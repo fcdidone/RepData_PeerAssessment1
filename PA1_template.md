@@ -31,7 +31,7 @@ as.Date(activity$date) -> activity$date
 
 First, I loaded the plyr package for helping me to calculate the total number, since it is simpler than the split aplay method.
 
-Then I counted the total steps number. Note: Iremove the missing values, because the assingment says to ignore for know.
+Then I counted the total steps number. Note: I removed the missing values, because the assingment says to ignore for know.
 
 
 
@@ -147,7 +147,7 @@ p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
-The values are almost the same are diferent as we can see here:
+The values are diferent as we can see here:
 
 
 
