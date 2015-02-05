@@ -8,6 +8,7 @@
 
 
 
+
 ```r
 read.csv("activity.csv") -> activity
 ```
@@ -37,12 +38,14 @@ Then I counted the total steps number. Note: I removed the missing values, becau
 
 ```r
 library(plyr)
-ddply(activity, ~ date,summarise, step.total = sum(steps, na.rm= TRUE)) -> total
+ddply(activity, ~ date,summarise, step.total = sum(steps)) -> total
 ```
 
 2. Make a histogram of the total number of steps taken each day
 
-I used the ggplot2 package ande the sclae package for making this histrogram
+I used the ggplot2 package ande the sclae package for making this histrogram  
+
+Note it will be a warning saying that the missing values were not plotted, but that is okay.
 
 
 
@@ -51,7 +54,11 @@ I used the ggplot2 package ande the sclae package for making this histrogram
 library(ggplot2)
 library(scales)
 p <- ggplot(total, aes( x = date, y = step.total))
-p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps")+ ggtitle("Histogram of the total number os steps taken each day")+scale_x_date(breaks=date_breaks(width="15 days"))
+p +geom_histogram( stat= "identity",fill="gray30", colour="gray30")+ xlab("Date") + ylab("Total number of steps")+ ggtitle("Histogram of the total number os steps taken each day")+scale_x_date(breaks=date_breaks(width="15 days"))
+```
+
+```
+## Warning: Removed 8 rows containing missing values (position_stack).
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
@@ -60,16 +67,18 @@ p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps
 
 3. Calculate and report the mean and median of the total number of steps taken per day
 
+Note: I changed the options for scientific notation and digits
+
 
 
 ```r
-summary(total[,2])[3:4]
+options(scipen = 1, digits = 2)
+mean(total[,2], na.rm=TRUE) -> m1
+median(total[,2], na.rm=TRUE) -> md1
 ```
 
-```
-## Median   Mean 
-##  10400   9354
-```
+The mean is 10766.19  
+The medians is 10765
 
 ## What is the average daily activity pattern?
 
@@ -140,41 +149,32 @@ for(i in 1:nrow(activity2)) {
 
 ```r
 as.Date(activity2$date) -> activity2$date
-ddply(activity2, ~date,summarise, step.total = sum(steps,na.rm=T)) -> total2
+ddply(activity2, ~date,summarise, step.total = sum(steps)) -> total2
 p <- ggplot(total2, aes( x = date, y = step.total))
-p +geom_histogram( stat= "identity")+ xlab("Date") + ylab("Total number of steps")+ ggtitle("Histogram of the total number os steps taken each day")+scale_x_date(breaks=date_breaks(width="15 days"))
+p +geom_histogram( stat= "identity", fill= "gray30", colour= "gray30")+ xlab("Date") + ylab("Total number of steps")+ ggtitle("Histogram of the total number os steps taken each day")+scale_x_date(breaks=date_breaks(width="15 days"))
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
-The values are diferent as we can see here:
+The values are not so diferent as we can see here:
 
 
 
 ```r
-summary(total2[,2])[3:4] -> a3
-
-summary(total[,2])[3:4] -> a4
-
-## with missing values
-
-print(a4)
+mean(total2[,2]) -> m2
+median(total2[,2]) -> md2
 ```
 
-```
-## Median   Mean 
-##  10400   9354
-```
+* with missing values excluded
 
-```r
-## without missing values
-print(a3)
-```
+Mean: 10766.19  
+Median:10765  
 
-```
-## Median   Mean 
-##  10770  10770
-```
+* without missing values substituded by the average steps of that interval:
+
+Mean: 10766.19  
+Median:10766.19
+
 
 
 
